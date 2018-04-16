@@ -4,10 +4,10 @@
 %% inputs
 
 %inputs that change with every batch
-imageDirectory = 'F:\FI13\AT_FI13_conf\AT_FI13_conf_rd1_1';
-saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI13_matlab_out\matlab_output\';
-experiment = 'FI13_';
-timepoint = '3h_';
+imageDirectory = 'F:\FI12\AT_FI12_confM\AT_FI12_confM_72h_rd1_1';
+saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI12\matlab_output\';
+experiment = 'FI12_';
+timepoint = '72h_';
 mag = '20x_';
 
 %inputs that change with every experiment
@@ -24,18 +24,20 @@ fields = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 channels = ["UV - DAPI", "Blue - FITC", "Green - dsRed", "Red - Cy5"];
 
 %% cycle through rows. columns, fields of view, call image input, segment, quantify functions 
-for r = 2:7; %choose rows
-    for c = 2:9 %choose columns
+for r = 2:4; %choose rows
+    for c = 2:7 %choose columns
         for f = 1:3 %choose fields
             % REMOVE 0 IF TIMEPOINT IS ALREADY PADDED
-            name = char(strcat(experiment, '0', timepoint, mag, rows(r),...
+            name = char(strcat(experiment, timepoint, mag, rows(r),...
                 columns(c), '_fld', fields(f), 'rd1'));
             FOV = char(strcat(rows(r), columns(c), '0', fields(f)));
             FOVstack = CycIFinput_1cycle(imageDirectory, channels, rows(r)...
                 , columns(c), fields(f));
             [nuclei, nucleiShrink, nucleiExpand, waterMF] = ...
                 CycIFNucSeg_1cyc(FOVstack); 
-            if max(nuclei(:)) == 0
+            if max(nuclei(:)) < 5
+                clearvars name FOVstack nuclei nucleiShrink nucleiExpand...
+                waterMF
                 continue
             end
             [cells, cytoplasm] = CycIFCellSeg_1cyc(FOVstack, nuclei,...
