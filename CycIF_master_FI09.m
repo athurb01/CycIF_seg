@@ -4,11 +4,12 @@
 %% inputs
 
 %inputs that change with every batch
-imageDirectory = 'F:\FI13\AT_FI13_conf\AT_FI13_conf_rd3_1';
-saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI13_matlab_out\matlab_output\';
-experiment = 'FI13_';
-timepoint = '03h_';
+imageDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI11';
+saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI09\FI09rd8_matlab_output\';
+experiment = 'FI09_';
+timepoint = '3h_';
 mag = '20x_';
+maxCycle = 8;
 
 %inputs that change with every experiment
 channelNames = {'Brightfield', 'Hoechst1', 'Hoechst2', 'Hoechst3',...
@@ -24,35 +25,22 @@ fields = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 channels = ["UV - DAPI", "Blue - FITC", "Green - dsRed", "Red - Cy5"];
 
 %% cycle through rows. columns, fields of view, call image input, segment, quantify functions 
-for r = 2:7; %choose rows
-    for c = 5:5 %choose columns
-        for f = 1:3 %choose fields
+for r = 2:2; %choose rows
+    for c = 2:6 %choose columns
+        for f = 1:2 %choose fields
             % REMOVE 0 IF TIMEPOINT IS ALREADY PADDED
-            name = char(strcat(experiment, timepoint, mag, rows(r),...
-                columns(c), '_fld', fields(f), 'rd3'));
-            FOV = char(strcat(rows(r), columns(c), '0', fields(f)));
-            FOVstack = CycIFinput_1cycle(imageDirectory, channels, rows(r)...
-                , columns(c), fields(f));
-            [nuclei, nucleiShrink, nucleiExpand, waterMF] = ...
-                CycIFNucSeg_1cyc(FOVstack); 
-            if max(nuclei(:)) < 5
-                clearvars name FOVstack nuclei nucleiShrink nucleiExpand...
-                waterMF
-                continue
-            end
-            [cells, cytoplasm] = CycIFCellSeg_1cyc(FOVstack, nuclei,...
-                nucleiExpand, waterMF);
-            [bugs, bugsCellLabel] = CycIFBugSeg_1cyc(FOVstack, cells);
-            featureData = CycIFData_1cyc(FOVstack,...
-                nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
-                saveDirectory, name, FOV, channels);
+            name = char(strcat(experiment, '0', timepoint, mag, rows(r), columns(c), '_fld', fields(f)));
+            FOVstack = CycIFinputTiffStack(imageDirectory, experiment, timepoint, mag, maxCycle, rows(r), columns(c), fields(f));
+            [nuclei, nucleiShrink, nucleiExpand, waterMF] = CycIFNucSeg(FOVstack, maxCycle); 
+            [cells, cytoplasm] = CycIFCellSeg(FOVstack, nuclei, nucleiExpand, waterMF);
+            [bugs, bugsCellLabel] = CycIFBugSeg(FOVstack, maxCycle, cells);
+            featureData = CycIFData(FOVstack, maxCycle, channelNames, nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel, saveDirectory, name);
             nucleiEdge = edge(nuclei>0);
             cellEdge = edge(cells>0);
             bugEdge = edge(bugs>0);
             cytoEdge = nucleiEdge + cellEdge;
             allEdge = cytoEdge + bugEdge;
-            masks = cat(3, nuclei, nucleiShrink, nucleiExpand, cells,...
-                cytoplasm, bugs, bugsCellLabel,...
+            masks = cat(3, nuclei, nucleiShrink, nucleiExpand, cells, cytoplasm, bugs, bugsCellLabel,...
                 nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
             edgeMasks = cat(3, nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
 %             for m=1:length(masks(1, 1, :))
@@ -60,9 +48,7 @@ for r = 2:7; %choose rows
 %             end
             text = strcat('finished file_', name);
             clearvars name FOVstack nuclei nucleiShrink nucleiExpand...
-                waterMF cells cytoplasm bugs bugsCellLabel featureData...
-                masks cellStats cytoplasmStats nucleiStats bugRatio...
-                bugCellStats
+                waterMF cells cytoplasm bugs bugsCellLabel featureData masks
         end %field
     end %columns
 end %rows

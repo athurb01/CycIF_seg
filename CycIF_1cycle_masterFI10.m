@@ -4,10 +4,10 @@
 %% inputs
 
 %inputs that change with every batch
-imageDirectory = 'F:\FI13\AT_FI13_conf\AT_FI13_conf_rd3_1';
-saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI13_matlab_out\matlab_output\';
-experiment = 'FI13_';
-timepoint = '03h_';
+imageDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI10\AT_FI10_conf_FI10_24h_confM_rd1_1';
+saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI10\FI10_matlab_output\';
+experiment = 'FI10_';
+timepoint = '72h_';
 mag = '20x_';
 
 %inputs that change with every experiment
@@ -24,12 +24,12 @@ fields = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 channels = ["UV - DAPI", "Blue - FITC", "Green - dsRed", "Red - Cy5"];
 
 %% cycle through rows. columns, fields of view, call image input, segment, quantify functions 
-for r = 2:7; %choose rows
-    for c = 5:5 %choose columns
+for r = 2:4; %choose rows
+    for c = 2:7 %choose columns
         for f = 1:3 %choose fields
             % REMOVE 0 IF TIMEPOINT IS ALREADY PADDED
             name = char(strcat(experiment, timepoint, mag, rows(r),...
-                columns(c), '_fld', fields(f), 'rd3'));
+                columns(c), '_fld', fields(f), 'rd1'));
             FOV = char(strcat(rows(r), columns(c), '0', fields(f)));
             FOVstack = CycIFinput_1cycle(imageDirectory, channels, rows(r)...
                 , columns(c), fields(f));
@@ -46,15 +46,15 @@ for r = 2:7; %choose rows
             featureData = CycIFData_1cyc(FOVstack,...
                 nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
                 saveDirectory, name, FOV, channels);
-            nucleiEdge = edge(nuclei>0);
-            cellEdge = edge(cells>0);
-            bugEdge = edge(bugs>0);
-            cytoEdge = nucleiEdge + cellEdge;
-            allEdge = cytoEdge + bugEdge;
-            masks = cat(3, nuclei, nucleiShrink, nucleiExpand, cells,...
-                cytoplasm, bugs, bugsCellLabel,...
-                nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
-            edgeMasks = cat(3, nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
+%             nucleiEdge = edge(nuclei>0);
+%             cellEdge = edge(cells>0);
+%             bugEdge = edge(bugs>0);
+%             cytoEdge = nucleiEdge + cellEdge;
+%             allEdge = cytoEdge + bugEdge;
+%             masks = cat(3, nuclei, nucleiShrink, nucleiExpand, cells,...
+%                 cytoplasm, bugs, bugsCellLabel,...
+%                 nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
+%             edgeMasks = cat(3, nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
 %             for m=1:length(masks(1, 1, :))
 %                 imwrite(masks(:, :, m), strcat(saveDirectory, name, '_masks.tif'), 'WriteMode', 'append',  'Compression','none');
 %             end
