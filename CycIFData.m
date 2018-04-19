@@ -159,7 +159,7 @@ for ch = maxCycle+1:(maxCycle*4)
         end
         %puncta
         featureData(countCell).punctaNuclei = sum(punctaMask(nuclei == obj));
-        featureData(countCell).punctaCell = sum(punctaMask(cell == obj));
+        featureData(countCell).punctaCell = sum(punctaMask(cells == obj));
         obj = obj+1; 
 
     end
