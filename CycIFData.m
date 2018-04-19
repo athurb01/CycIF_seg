@@ -1,4 +1,6 @@
-function [featureData] = CycIFData(FOVstack, maxCycle, channelNames, nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel, saveDirectory, name, FOV) 
+function [featureData] = CycIFData(FOVstack, maxCycle, channelNames,...
+    nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
+    saveDirectory, name, FOV, bugGFP, bugmCherry, punctaChannels) 
 %% extract data
 % background subtraction - current manual value
 for c= 2:(4*maxCycle)
@@ -92,6 +94,12 @@ for ch = maxCycle+1:(maxCycle*4)
     rangeIm = rangefilt(currentChannel);
     stdIm = uint16(stdfilt(currentChannel));
     entropyIm = uint16(entropyfilt(currentChannel));
+    % puncta analysis
+    if ismember(ch, punctaChannels)
+        punctaMask = CycIFFoci(currentChannel, nuclei, cells);
+    else
+        punctaMask = zeros(2048,2048);
+    end
     for countCell = startCount:(endCount) %countCell is row number of featureData
         %metadata
         featureData(countCell).experiment = name(1:4);
@@ -139,7 +147,7 @@ for ch = maxCycle+1:(maxCycle*4)
         featureData(countCell).intIntensityNC = featureData(countCell).intIntensityNuclei...
             /featureData(countCell).intIntensityCytoplasm;
         % bug per cell data
-        if ch == 9 | ch == 16
+        if ch == bugGFP | ch == bugmCherry
             featureData(countCell).meanBug = mean(currentChannel(bugsCellLabel == obj));
             featureData(countCell).intIntensityBug = ...
                 featureData(countCell).meanBug * bugsCellStats(obj).Area;
@@ -149,8 +157,9 @@ for ch = maxCycle+1:(maxCycle*4)
             featureData(countCell).intIntensityBug = 0;
             featureData(countCell).meanRatioBug = 0;
         end
-        
-        
+        %puncta
+        featureData(countCell).punctaNuclei = sum(punctaMask(nuclei == obj));
+        featureData(countCell).punctaCell = sum(punctaMask(cell == obj));
         obj = obj+1; 
 
     end
