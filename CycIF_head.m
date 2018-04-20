@@ -11,11 +11,14 @@ channels = ["UV - DAPI", "Blue - FITC", "Green - dsRed", "Red - Cy5"];
 for r = FOVlimits(1):FOVlimits(2); %choose rows
     for c = FOVlimits(3):FOVlimits(4) %choose columns
         for f = FOVlimits(5):FOVlimits(6) %choose fields
-            name = char(strcat(experiment, timepoint, mag, rows(r),...
-                columns(c), '_fld', fields(f)));
+            row = rows(r);
+            column = columns(c);
+            field = fields(f);
+            name = char(strcat(experiment, timepoint, mag, row,...
+                column, '_fld', field));
             FOV = char(strcat(rows(r), columns(c), '0', fields(f)));
             FOVstack = CycIFinputTiffStack(imageDirectory, experiment,...
-                timepoint, mag, maxCycle, rows(r), columns(c), fields(f));
+                timepoint, mag, maxCycle, row, column, field);
             [nuclei, nucleiShrink, nucleiExpand, waterMF] = CycIFNucSeg(FOVstack, maxCycle); 
             if max(nuclei(:)) == 0
                 continue
@@ -24,7 +27,8 @@ for r = FOVlimits(1):FOVlimits(2); %choose rows
             [bugs, bugsCellLabel] = CycIFBugSeg(FOVstack, maxCycle, cells);
             featureData = CycIFData(FOVstack, maxCycle, channelNames, nuclei,...
                 nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
-                saveDirectory, name, FOV, bugGFP, bugmCherry, punctaChannels);
+                saveDirectory, name, FOV, bugGFP, bugmCherry, punctaChannels,...
+                experiment, timepoint, mag,row, column, field);
             nucleiEdge = edge(nuclei>0);
             cellEdge = edge(cells>0);
             bugEdge = edge(bugs>0);

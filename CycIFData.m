@@ -1,8 +1,9 @@
 function [featureData] = CycIFData(FOVstack, maxCycle, channelNames,...
     nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
-    saveDirectory, name, FOV, bugGFP, bugmCherry, punctaChannels) 
+    saveDirectory, name, FOV, bugGFP, bugmCherry, punctaChannels,...
+    experiment, timepoint, mag, row, column, field) 
 %% extract data
-% background subtraction - current manual value
+% background subtraction - currentmanual value
 for c= 2:(4*maxCycle)
     FOVstack(:,:, c) = imsubtract(FOVstack(:,:,c), 110);
 end
@@ -102,12 +103,12 @@ for ch = maxCycle+1:(maxCycle*4)
     end
     for countCell = startCount:(endCount) %countCell is row number of featureData
         %metadata
-        featureData(countCell).experiment = name(1:4);
-        featureData(countCell).timepoint = name(6:8);
-        featureData(countCell).well = name(14:16);
-        featureData(countCell).row = name(14);
-        featureData(countCell).column = name(15:16);
-        featureData(countCell).field = name(end);
+        featureData(countCell).experiment = experiment);
+        featureData(countCell).timepoint = timepoint);
+        featureData(countCell).well = row + column);
+        featureData(countCell).row = row;
+        featureData(countCell).column = column;
+        featureData(countCell).field = field;
         featureData(countCell).object = obj;
         featureData(countCell).channel = channelNames(ch);
         % nuclei data
