@@ -1,4 +1,4 @@
-function [featureData] = CycIFData(FOVstack, maxCycle, channelNames,...
+function [morphology, featureData] = CycIFData(FOVstack, maxCycle, channelNames,...
     nuclei, nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
     saveDirectory, name, FOV, bugGFP, bugmCherry, punctaChannels,...
     experiment, timepoint, mag, row, column, field) 
@@ -103,9 +103,9 @@ for ch = maxCycle+1:(maxCycle*4)
     end
     for countCell = startCount:(endCount) %countCell is row number of featureData
         %metadata
-        featureData(countCell).experiment = experiment);
-        featureData(countCell).timepoint = timepoint);
-        featureData(countCell).well = row + column);
+        featureData(countCell).experiment = experiment;
+        featureData(countCell).timepoint = timepoint;
+        featureData(countCell).well = row + column;
         featureData(countCell).row = row;
         featureData(countCell).column = column;
         featureData(countCell).field = field;

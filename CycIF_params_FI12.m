@@ -10,7 +10,7 @@ experiment = 'FI12_';
 timepoint = '24h_';
 mag = '';
 maxCycle = 5; 
-FOVlimits = [2,4,2,7,1,3]; % array of row start/stop, column start/stop, field start/stop
+FOVlimits = [2,2,2,2,1,1]; % array of row start/stop, column start/stop, field start/stop
 
 %inputs that change with every experiment
 channelNames = { 'Hoechst1', 'Hoechst2', 'Hoechst3',...
@@ -25,4 +25,4 @@ punctaChannels = [10,19]; %channels to be analyzed for puncta
 
 [morphOut, fluorescenceOut] = CycIF_head(imageDirectory, saveDirectory,...
     experiment, timepoint, mag, maxCycle, FOVlimits, channelNames,...
-    bugGFP, bugmCherry, punctaChannels)
+    bugGFP, bugmCherry, punctaChannels);
