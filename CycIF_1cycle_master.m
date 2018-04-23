@@ -4,7 +4,7 @@
 %% inputs
 
 %inputs that change with every batch
-imageDirectory = 'F:\FI13\AT_FI13_conf\AT_FI13_conf_rd3_1';
+imageDirectory = 'F:\FI13\AT_FI13_conf\AT_FI13_conf_rd2_1';
 saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI13_matlab_out\matlab_output\';
 experiment = 'FI13_';
 timepoint = '03h_';
@@ -29,7 +29,7 @@ for r = 2:7; %choose rows
         for f = 1:3 %choose fields
             % REMOVE 0 IF TIMEPOINT IS ALREADY PADDED
             name = char(strcat(experiment, timepoint, mag, rows(r),...
-                columns(c), '_fld', fields(f), 'rd3'));
+                columns(c), '_fld', fields(f), 'rd2'));
             FOV = char(strcat(rows(r), columns(c), '0', fields(f)));
             FOVstack = CycIFinput_1cycle(imageDirectory, channels, rows(r)...
                 , columns(c), fields(f));
