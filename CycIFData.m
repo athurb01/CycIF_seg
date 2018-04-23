@@ -150,9 +150,11 @@ for ch = maxCycle+1:(maxCycle*4)
         % bug per cell data
         if ch == bugGFP | ch == bugmCherry
             featureData(countCell).meanBug = mean(currentChannel(bugsCellLabel == obj));
+            featureData(countCell).medianBug = median(currentChannel(bugsCellLabel == obj));
             featureData(countCell).intIntensityBug = ...
                 featureData(countCell).meanBug * bugsCellStats(obj).Area;
             featureData(countCell).meanRatioBug = mean(bugRatio(bugsCellLabel == obj));
+            featureData(countCell).medianRatioBug = median(bugRatio(bugsCellLabel == obj));
         else
             featureData(countCell).meanBug = 0;
             featureData(countCell).intIntensityBug = 0;

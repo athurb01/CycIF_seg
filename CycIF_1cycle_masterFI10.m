@@ -4,7 +4,7 @@
 %% inputs
 
 %inputs that change with every batch
-imageDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI10\AT_FI10_conf_FI10_24h_confM_rd1_1';
+imageDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI10\AT_FI10_conf_FI10_72h_confM_rd1_1';
 saveDirectory = 'C:\Users\Amy Thurber\Dropbox (Partners HealthCare)\Experiments\FI10\FI10_matlab_output\';
 experiment = 'FI10_';
 timepoint = '72h_';
