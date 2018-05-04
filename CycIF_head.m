@@ -7,9 +7,9 @@ channels = ["UV - DAPI", "Blue - FITC", "Green - dsRed", "Red - Cy5"];
 %% cycle through rows. columns, fields of view, call image input, segment, quantify functions 
 for f = FOVlimits(7):FOVlimits(8) %choose fields
     field = fields(f);
-    name = char(strcat(experiment, timepoint, mag, row,...
+    name = char(strcat(experiment, timepoint, mag, '_', row,...
         column, '_fld', field))
-    FOV = char(strcat(rows(r), columns(c), '0', fields(f)));
+    FOV = char(strcat(row, column, '0', field));
     FOVstack = CycIFinputTiffStack(imageDirectory, experiment,...
         timepoint, mag, maxCycle, row, column, field);
     [nuclei, nucleiShrink, nucleiExpand, waterMF] = CycIFNucSeg(FOVstack, maxCycle); 

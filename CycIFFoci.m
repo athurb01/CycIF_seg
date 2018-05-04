@@ -18,5 +18,5 @@ Imax= imregionalmax(I_log);
 %sample nuclei spots to use as background,convert mean absolute deviation
 %to std, and take 20 std above median to set threshold.
 backSpots = I_log(background.*double(Imax)>0);
-threshold=median(nucSpots(:)) + 4*mad(backSpots(:))*1.4826;
+threshold=median(backSpots(:)) + 4*mad(backSpots(:))*1.4826;
 fociMask=(I_log.*Imax)>threshold;
