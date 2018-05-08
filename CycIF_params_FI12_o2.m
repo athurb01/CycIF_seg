@@ -10,7 +10,7 @@ saveDirectory = '/home/aet13/FI12/FI12_matlab_out/';
 experiment = 'FI12_';
 mag = '';
 maxCycle = 5; 
-FOVlimits = [2,3,2,3,2,3,1,3]; % array of  timepoint, row, column, and field start/stop
+FOVlimits = [2,3,2,4,2,7,1,3]; % array of  timepoint, row, column, and field start/stop
 
 timepoints = {"03h", "24h", "48h", "72h"};
 rows ={"A", "B", "C", "D", "E", "F", "G", "H"};

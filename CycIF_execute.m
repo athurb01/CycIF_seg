@@ -29,12 +29,12 @@ end
 if parallel == true
     submit(batchJob);
     wait(batchJob);
-    for i = 1:length(batchJob.Tasks)
-        task = batchJob(i);
-        if strcmp(task.State, 'error')
-            fprintf(1, 'Task %d: %s', i, task.ErrorMessage);
-        end
-    end
+%     for i = 1:length(batchJob.Tasks)
+%         task = batchJob(i);
+%         if strcmp(task.State, 'error')
+%             fprintf(1, 'Task %d: %s', i, task.ErrorMessage);
+%         end
+%     end
     %batchJob.delete to delete log files
 end
 
