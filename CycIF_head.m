@@ -8,7 +8,7 @@ channels = ["UV - DAPI", "Blue - FITC", "Green - dsRed", "Red - Cy5"];
 for f = FOVlimits(7):FOVlimits(8) %choose fields
     field = fields(f);
     name = char(strcat(experiment, timepoint, mag, '_', row,...
-        column, '_fld', field))
+        column, '_fld', field));
     FOV = char(strcat(row, column, '0', field));
     FOVstack = CycIFinputTiffStack(imageDirectory, experiment,...
         timepoint, mag, maxCycle, row, column, field);
@@ -16,7 +16,7 @@ for f = FOVlimits(7):FOVlimits(8) %choose fields
     if max(nuclei(:)) == 0
         continue
     end
-    [cells, cytoplasm] = CycIFCellSeg(FOVstack, nuclei, nucleiExpand, waterMF);
+    [cells, cytoplasm] = CycIFCellSeg(FOVstack, nuclei, nucleiExpand, waterMF, channelNames);
     [bugs, bugsCellLabel] = CycIFBugSeg(FOVstack, maxCycle, cells);
     [morph,fluorescence] = CycIFData(FOVstack, maxCycle, channelNames, nuclei,...
         nucleiShrink, cells, cytoplasm, bugs, bugsCellLabel,...
@@ -30,9 +30,9 @@ for f = FOVlimits(7):FOVlimits(8) %choose fields
      masks = cat(3, nuclei, nucleiShrink, nucleiExpand, cells, cytoplasm, bugs, bugsCellLabel,...
         nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
      edgeMasks = cat(3, nucleiEdge, cellEdge, cytoEdge, bugEdge, allEdge);
-%             for m=1:length(masks(1, 1, :))
-%                 imwrite(masks(:, :, m), strcat(saveDirectory, name, '_masks.tif'), 'WriteMode', 'append',  'Compression','none');
-%             end
+            for m=1:length(masks(1, 1, :))
+                imwrite(masks(:, :, m), strcat(saveDirectory, name, '_masks.tif'), 'WriteMode', 'append',  'Compression','none');
+            end
      clearvars name FOVstack nuclei nucleiShrink nucleiExpand...
                 waterMF cells cytoplasm bugs bugsCellLabel featureData...
                 masks cellStats cytoplasmStats nucleiStats bugRatio...

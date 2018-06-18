@@ -7,7 +7,7 @@ I_close=imclose(I,strel('sphere',4)); %dilation then erosion, blurring effect
 %Ith = imtophat(I,strel('disk',15));
 
 %fine tune initial nuclei mask
-bw= I_close > 8000; %manual threshold
+bw= I_close > 1000; %manual threshold
 bw= imclose(bw,strel('sphere',5));
 bw = imfill(bw,'holes');
 bw = bwareaopen(bw,150); %remove objects with less than x pixels

@@ -1,8 +1,17 @@
-function [cells, cytoplasm] = CycIFCellSeg(FOVstack, nuclei, nucleiExpand, waterMF)
+function [cells, cytoplasm] = CycIFCellSeg(FOVstack, nuclei, nucleiExpand, waterMF, channelNames)
 %% cytoplasm segmentation
 % create sum of multiple channel image to use for cell segmentation
 % NEED TO CHANGE SO IT IS DEPENDENT ON CHANNEL NAME NOT POSITION
-sum = FOVstack(:,:,15) + FOVstack(:,:,16);%change to select markers
+IndexCh = strfind(channelNames, 'RelA');
+idx_RelA = find(not(cellfun('isempty', IndexCh)));
+IndexCh = strfind(channelNames, 'Lamp1');
+idx_Lamp1 = find(not(cellfun('isempty', IndexCh)));
+IndexCh = strfind(channelNames, 'CD68');
+idx_CD68 = find(not(cellfun('isempty', IndexCh)));
+IndexCh = strfind(channelNames, 'actin');
+idx_actin = find(not(cellfun('isempty', IndexCh)));
+sum = FOVstack(:,:,idx_RelA) + FOVstack(:,:,idx_Lamp1) + ...
+    FOVstack(:,:,idx_CD68) + FOVstack(:,:,idx_actin);
 % currently mitotracker red, RelA 
  
 Ith = imtophat(sum,strel('disk',30));
