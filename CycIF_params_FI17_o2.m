@@ -5,12 +5,12 @@
 %% inputs
 
 %inputs that change with every batch
-imageDirectory = 'D:\FI17_registered\';
-saveDirectory = 'D:\FI17_registered\JPEG\';
+imageDirectory = '/n/groups/lsp/AmyT/FI17/FI17_registered/';
+saveDirectory = '/n/groups/lsp/AmyT/FI17/FI17_mat_output/';
 experiment = 'FI17_';
 mag = '';
 maxCycle = 9; 
-FOVlimits = [1,1,2,3,3,3,1,1]; % array of  timepoint, row, column, and field start/stop
+FOVlimits = [1,1,2,5,3,7,1,1]; % array of  timepoint, row, column, and field start/stop
 
 timepoints = {"03h", "24h", "48h", "72h"};
 rows ={"A", "B", "C", "D", "E", "F", "G", "H"};
