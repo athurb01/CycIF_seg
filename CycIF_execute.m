@@ -5,7 +5,7 @@ function [outputs] = CycIF_execute(jobs, parallel, imageDirectory, saveDirectory
 
 if parallel == true
     c=parcluster;
-    c.AdditionalProperties.WallTime = '08:00:00';
+    c.AdditionalProperties.WallTime = '04:00:00';
     c.AdditionalProperties.QueueName = 'short';
     c.AdditionalProperties.AdditionalSubmitArgs = '--mem-per-cpu=4G -o out -e err'
     batchJob = createJob(c);
