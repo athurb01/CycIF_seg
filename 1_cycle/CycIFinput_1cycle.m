@@ -3,7 +3,7 @@ function [imageStack] = inputTiffStack(directory, channels, row, column, field)
 
 cd (directory);
 
-for k = 1:4
+for k = 1:3
     a = [row, '-', column];
     b = ['(fld', field, 'wv', channels(k)];
     c = strjoin(a);

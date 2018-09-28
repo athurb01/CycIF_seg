@@ -1,0 +1,13 @@
+Executing: /n/app/matlab/2018a/bin/worker 
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2018 The MathWorks, Inc.
+                   R2018a (9.4.0.813654) 64-bit (glnxa64)
+                             February 23, 2018
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+slurmstepd: error: Job 18807983 exceeded memory limit (1129328 > 1024000), being killed
+slurmstepd: error: *** JOB 18807983 ON compute-a-16-111 CANCELLED AT 2018-07-13T14:17:22 ***

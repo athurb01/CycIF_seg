@@ -10,7 +10,7 @@ saveDirectory = '/n/scratch2/aet13/FI17/FI17_output/';
 experiment = 'FI17_';
 mag = '';
 maxCycle = 10; 
-FOVlimits = [1,1,5,5,4,5,1,3]; % array of  timepoint, row, column, and field start/stop
+FOVlimits = [1,1,2,2,6,6,1,3]; % array of  timepoint, row, column, and field start/stop
 
 timepoints = {"03h", "24h", "48h", "72h"};
 rows ={"A", "B", "C", "D", "E", "F", "G", "H"};

@@ -1,13 +1,14 @@
 function [featureData] = CycIFData(FOVstack, nuclei, nucleiShrink, cells,...
-    cytoplasm, bugs, bugsCellLabel, saveDirectory, name, FOV, channels) 
+    cytoplasm, bugs, bugsCellLabel, saveDirectory, name, FOV, channels,...
+    experiment, timepoint, row, column,field) 
 %% extract data
 % background subtraction - current manual value
-for c = 1:4
+for c = 1:3
     FOVstack(:,:, c) = imsubtract(FOVstack(:,:,c), 110);
 end
 
 % slice that is GFP/mCherry
-bugRatio = double(FOVstack(:,:,2))./double(FOVstack(:,:,3));
+%bugRatio = double(FOVstack(:,:,2))./double(FOVstack(:,:,3));
 
 % object property data, once per object
 
@@ -89,17 +90,17 @@ obj = 1; %keeps track of cell number
 
 % cycle through each channel, cycle through each cell (obj) and extract
 % all data features
-for c = 1:4
+for c = 1:3
     currentChannel = im2double(FOVstack(:,:,c));
     for countCell = startCount:(endCount) %countCell is row number of featureData
         %metadata
-        featureData(countCell).experiment = name(1:4);
-        featureData(countCell).timepoint = name(6:8);
-        featureData(countCell).well = name(14:16);
-        featureData(countCell).row = name(14);
-        featureData(countCell).column = name(15:16);
-        featureData(countCell).field = name(21);
-        featureData(countCell).round = name(end);
+        featureData(countCell).experiment = experiment;
+        featureData(countCell).timepoint = timepoint;
+        featureData(countCell).well = row + column;
+        featureData(countCell).row = row;
+        featureData(countCell).column = column;
+        featureData(countCell).field = field;
+        featureData(countCell).round = 1;
         featureData(countCell).object = obj;
         featureData(countCell).channel = channels(c);
         % nuclei data
@@ -129,20 +130,20 @@ for c = 1:4
             /featureData(countCell).medianCytoplasm;
         featureData(countCell).intIntensityNC = featureData(countCell).intIntensityNuclei...
             /featureData(countCell).intIntensityCytoplasm;
-        % bug per cell data
-        if c == 2 | c == 3
-        featureData(countCell).meanBug = mean(currentChannel(bugsCellLabel == obj));
-        featureData(countCell).medianBug = median(currentChannel(bugsCellLabel == obj));
-        featureData(countCell).intIntensityBug = ...
-            featureData(countCell).meanBug * bugsCellStats(obj).Area;
-        featureData(countCell).meanRatioBug = mean(bugRatio(bugsCellLabel == obj));
-        featureData(countCell).medianRatioBug = median(bugRatio(bugsCellLabel == obj));
-        featureData(countCell).areaBug = bugsCellStats(obj).Area;
-        else
-            featureData(countCell).meanBug = 0;
-            featureData(countCell).intIntensityBug = 0;
-            featureData(countCell).meanRatioBug = 0;
-        end
+%         % bug per cell data
+%         if c == 2 | c == 3
+%         featureData(countCell).meanBug = mean(currentChannel(bugsCellLabel == obj));
+%         featureData(countCell).medianBug = median(currentChannel(bugsCellLabel == obj));
+%         featureData(countCell).intIntensityBug = ...
+%             featureData(countCell).meanBug * bugsCellStats(obj).Area;
+%         featureData(countCell).meanRatioBug = mean(bugRatio(bugsCellLabel == obj));
+%         featureData(countCell).medianRatioBug = median(bugRatio(bugsCellLabel == obj));
+%         featureData(countCell).areaBug = bugsCellStats(obj).Area;
+%         else
+%             featureData(countCell).meanBug = 0;
+%             featureData(countCell).intIntensityBug = 0;
+%             featureData(countCell).meanRatioBug = 0;
+%         end
         
         
         obj = obj+1; 

@@ -3,7 +3,7 @@ function [cells, cytoplasm] = CycIFCellSeg(FOVstack, nuclei, nucleiExpand, water
 % create sum of multiple channel image to use for cell segmentation
 % NEED TO CHANGE SO IT IS DEPENDENT ON CHANNEL NAME NOT POSITION
 sum = uint16(zeros(2048,2048));
-for c = 1:4
+for c = 1:3
     sum = sum + FOVstack(:,:,c);
 end 
  

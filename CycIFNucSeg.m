@@ -2,7 +2,7 @@ function [nuclei, nucleiShrink, nucleiExpand, waterMF] = CycIFNucSeg(FOVstack, m
 %% nuclei segmentation
 %based on Clarence Yapp code
 %manually set cycle to segment nuclei
-I = FOVstack(:,:, maxCycle);
+I = FOVstack(:,:, (maxCycle-1));
 I_close=imclose(I,strel('sphere',4)); %dilation then erosion, blurring effect
 %Ith = imtophat(I,strel('disk',15));
 

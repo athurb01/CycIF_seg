@@ -11,8 +11,17 @@ for c= 1:(4*maxCycle)
 end
 
 % image that is GFP/mCherry
-bugRatio_Z = double(FOVstack(:,:,bugGFP(1)))./double(FOVstack(:,:,bugmCherry(1)));
-bugRatio_slice = double(FOVstack(:,:,bugGFP(2)))./double(FOVstack(:,:,bugmCherry(2)));
+IndexCh = strfind(channelNames, bugGFP(1));
+idx_GFP_Z = find(not(cellfun('isempty', IndexCh)));
+IndexCh = strfind(channelNames, bugGFP(2));
+idx_GFP_slice = find(not(cellfun('isempty', IndexCh)));
+IndexCh = strfind(channelNames, bugmCherry(1));
+idx_mCher_Z = find(not(cellfun('isempty', IndexCh)));
+IndexCh = strfind(channelNames, bugmCherry(2));
+idx_mCher_slice = find(not(cellfun('isempty', IndexCh)));
+
+bugRatio_Z = double(FOVstack(:,:,idx_GFP_Z))./double(FOVstack(:,:,idx_mCher_Z));
+bugRatio_slice = double(FOVstack(:,:,idx_GFP_slice))./double(FOVstack(:,:,idx_mCher_slice));
 
 % object property data, once per object
 
@@ -58,6 +67,7 @@ for i = 1:numCells
     cytoplasmStats(i).CellNumber = i;
     bugsCellStats(i).FormFactor = bugsCellStats(i).Perimeter/bugsCellStats(i).Area;
     bugsCellStats(i).CellNumber = i;
+    cellStats(i).timepoint = timepoint;
 end
 
 % convert morphology data to table and merge
@@ -68,7 +78,7 @@ nucleiStatsTab.Properties.VariableNames = {'NucArea' 'NucBoundingBox' 'NucCentro
 cellStatsTab = struct2table(cellStats);
 cellStatsTab.Properties.VariableNames = {'CellArea' 'CellBoundingBox' 'CellCentroid'...
     'CellEccentricity' 'CellMajorAxisLength' 'CellMinorAxisLength'...
-    'CellPerimeter' 'CellSolidity' 'CellFormFactor' 'CellNumber'};
+    'CellPerimeter' 'CellSolidity' 'CellFormFactor' 'CellNumber' 'timepoint'};
 cytoplasmStatsTab = struct2table(cytoplasmStats);
 cytoplasmStatsTab.Properties.VariableNames = {'CytArea' 'CytBoundingBox' 'CytCentroid'...
     'CytEccentricity' 'CytMajorAxisLength' 'CytMinorAxisLength'...
@@ -94,16 +104,22 @@ obj = 1; %keeps track of cell number
 % all data features
 for ch = 1:(maxCycle*4)
     currentChannel = im2double(FOVstack(:,:,ch));
+    currentChannel = (currentChannel.*65535)+1;%convert back to original pixel values and add 1 to get rid of 0s
+    
     % texture filters
     rangeIm = rangefilt(currentChannel);
     stdIm = uint16(stdfilt(currentChannel));
     entropyIm = uint16(entropyfilt(currentChannel));
+    
     % puncta analysis
-    if ismember(ch, punctaChannels)
+    if ismember(channelNames(ch), punctaChannels)
         punctaMask = CycIFFoci(currentChannel, nuclei, cells);
     else
         punctaMask = zeros(2048,2048);
     end %puncta end
+    
+    currentChannel = log10(currentChannel); %log scale for data extraction
+    
     for countCell = startCount:(endCount) %countCell is row number of featureData
         %metadata
         featureData(countCell).experiment = experiment;
@@ -151,14 +167,14 @@ for ch = 1:(maxCycle*4)
         featureData(countCell).intIntensityNC = featureData(countCell).intIntensityNuclei...
             /featureData(countCell).intIntensityCytoplasm;
         % bug per cell data
-        if ch == bugGFP(1) | ch == bugmCherry(1)
+        if ismember(channelNames(ch), bugGFP(1)) | ismember(channelNames(ch), bugmCherry(1))
             featureData(countCell).meanBug = mean(currentChannel(bugsCellLabel == obj));
             featureData(countCell).medianBug = median(currentChannel(bugsCellLabel == obj));
             featureData(countCell).intIntensityBug = ...
                 featureData(countCell).meanBug * bugsCellStats(obj).Area;
             featureData(countCell).meanRatioBug = mean(bugRatio_Z(bugsCellLabel == obj));
             featureData(countCell).medianRatioBug = median(bugRatio_Z(bugsCellLabel == obj));
-        elseif ch == bugGFP(2) | ch == bugmCherry(2)
+        elseif ismember(channelNames(ch), bugGFP(2)) | ismember(channelNames(ch), bugmCherry(2))
             featureData(countCell).meanBug = mean(currentChannel(bugsCellLabel == obj));
             featureData(countCell).medianBug = median(currentChannel(bugsCellLabel == obj));
             featureData(countCell).intIntensityBug = ...
