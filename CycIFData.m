@@ -118,8 +118,6 @@ for ch = 1:(maxCycle*4)
         punctaMask = zeros(2048,2048);
     end %puncta end
     
-    currentChannel = log10(currentChannel); %log scale for data extraction
-    
     for countCell = startCount:(endCount) %countCell is row number of featureData
         %metadata
         featureData(countCell).experiment = experiment;
